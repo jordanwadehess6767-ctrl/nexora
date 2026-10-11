@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXORA - AI Learning Coach</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #080b14;
+  color: white;
+  min-height: 100vh;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+.app {
+  max-width: 500px;
+  margin: auto;
+  min-height: 100vh;
+  padding-bottom: 85px;
+}
+
+header {
+  padding: 22px 18px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  color: #7c5cff;
+}
+
+.profile {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#7c5cff,#00d4ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.screen {
+  display: none;
+  padding: 10px 18px;
+}
+
+.screen.active {
+  display: block;
+}
+
+.card {
+  background: #111624;
+  border: 1px solid #20283a;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 15px;
+}
+
+.hero {
+  background: linear-gradient(135deg,#171a38,#101827);
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.small {
+  color: #9ba5bb;
+  font-size: 13px;
+}
+
+h1 {
+  font-size: 27px;
+  margin: 5px 0;
+}
+
+h2 {
+  font-size: 21px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+.xp-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.progress {
+  height: 9px;
+  background: #242b3c;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 7px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,#7c5cff,#00d4ff);
+  transition: width .4s;
+}
+
+.character {
+  font-size: 75px;
+  text-align: center;
+  margin: 10px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 9px;
+}
+
+.stat {
+  background: #171c2a;
+  padding: 13px 5px;
+  border-radius: 13px;
+  text-align: center;
+}
+
+.stat strong {
+  display: block;
+  font-size: 18px;
+}
+
+.stat span {
+  font-size: 11px;
+  color: #8993a8;
+}
+
+.primary {
+  width: 100%;
+  padding: 14px;
+  border-radius: 13px;
+  background: linear-gradient(90deg,#7c5cff,#5b8cff);
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 8px;
+}
+
+.secondary {
+  width: 100%;
+  padding: 13px;
+  border-radius: 13px;
+  background: #20273a;
+  color: white;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 10px;
+}
+
+.subject {
+  background: #121827;
+  border: 1px solid #252e42;
+  border-radius: 16px;
+  padding: 15px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.subject:hover {
+  transform: translateY(-2px);
+  border-color: #7c5cff;
+}
+
+.subject-icon {
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+
+.subject-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.subject-xp {
+  color: #8993a8;
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.subject-bar {
+  height: 5px;
+  background: #252c3c;
+  border-radius: 10px;
+  margin-top: 9px;
+  overflow: hidden;
+}
+
+.subject-fill {
+  height: 100%;
+  background: #7c5cff;
+}
+
+input, textarea, select {
+  width: 100%;
+  background: #0b101c;
+  color: white;
+  border: 1px solid #2b3449;
+  border-radius: 12px;
+  padding: 13px;
+  outline: none;
+  margin-top: 8px;
+}
+
+textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+}
+
+.chat-box {
+  height: 390px;
+  overflow-y: auto;
+  background: #0c111d;
+  border-radius: 15px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.message {
+  padding: 11px;
+  border-radius: 13px;
+  margin-bottom: 9px;
+  max-width: 88%;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.ai {
+  background: #1b2233;
+}
+
+.user {
+  background: #6750d8;
+  margin-left: auto;
+}
+
+.pattern-result {
+  margin-top: 15px;
+}
+
+.pattern {
+  background: #171e2d;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.back {
+  background: transparent;
+  color: #9ba5bb;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(500px,100%);
+  background: #101522;
+  border-top: 1px solid #222a3b;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  padding: 9px 5px;
+  z-index: 10;
+}
+
+.nav-btn {
+  background: transparent;
+  color: #7f899d;
+  padding: 6px;
+  font-size: 11px;
+}
+
+.nav-btn.active {
+  color: #8d73ff;
+}
+
+.nav-icon {
+  font-size: 19px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.tip {
+  color: #aeb8cb;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  background: #27203e;
+  color: #bcaeff;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+  <div class="logo">NEX<span>ORA</span></div>
+  <div class="profile">🧠</div>
+</header>
+
+<!-- HOME -->
+<section id="home" class="screen active">
+
+  <div class="hero">
+    <div class="small">WELCOME BACK</div>
+    <h1>Ready to learn?</h1>
+    <p class="small">Your AI learning coach is ready.</p>
+
+    <div class="character" id="character">🤖</div>
+
+    <div class="xp-row">
+      <span id="levelText">Level 1</span>
+      <span id="xpText">0 / 100 XP</span>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="xpBar"></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <strong id="streak">1</strong>
+      <span>Day Streak</span>
+    </div>
+
+    <div class="stat">
+      <strong id="totalXP">0</strong>
+      <span>Total XP</span>
+    </div>
+
+    <div class="stat">
+      <strong id="levelNumber">1</strong>
+      <span>Level</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:15px;">
+    <h2>What should I study?</h2>
+    <p class="tip">
+      NEXORA can choose your next activity using your
+      subjects, progress and weak areas.
+    </p>
+
+    <button class="primary" onclick="smartStudy()">
+      Choose For Me ⚡
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📅 Exam Planner</h2>
+
+    <p class="tip">
+      Tell NEXORA when your test is and get a
+      personalised study plan.
+    </p>
+
+    <button class="primary" onclick="openStudyPlanner()">
+      Build My Study Plan
+    </button>
+  </div>
+
+  <h2>My Subjects</h2>
+
+  <div class="subject-grid" id="homeSubjects"></div>
+
+</section>
+
+
+<!-- SUBJECTS -->
+<section id="subjects" class="screen">
+
+  <h2>My Subjects</h2>
+
+  <div class="card">
+    <p class="tip">
+      Choose a subject to open its personal learning dashboard.
+    </p>
+  </div>
+
+  <div class="subject-grid" id="allSubjects"></div>
+
+</section>
+
+
+<!-- SUBJECT DASHBOARD -->
+<section id="subjectDashboard" class="screen">
+
+  <button class="back" onclick="showScreen('subjects')">
+    ← Back to Subjects
+  </button>
+
+  <div class="hero">
+    <div class="subject-icon" id="dashboardIcon">📚</div>
+
+    <h1 id="dashboardName">Mathematics</h1>
+
+    <p class="small" id="dashboardDescription">
+      Your personal learning dashboard.
+    </p>
+
+    <div class="xp-row">
+      <span id="subjectXP">0 XP</span>
+      <span id="subjectProgressText">0%</span>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="subjectProgressBar"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Weak Areas</h2>
+    <div id="weakAreas"></div>
+  </div>
+
+  <div class="card">
+    <h2>📈 Your Progress</h2>
+
+    <p class="tip" id="progressMessage">
+      Start studying to build your subject progress.
+    </p>
+
+    <button class="primary" onclick="earnSubjectXP()">
+      Complete Practice +20 XP
+    </button>
+
+    <button class="secondary" onclick="openTutorFromSubject()">
+      Ask NEXORA Tutor
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Coming Soon</h2>
+
+    <p class="tip">
+      NEXORA will analyse your old tests and find repeated
+      question patterns and methods for this subject.
+    </p>
+  </div>
+
+</section>
+
+
+<!-- TUTOR -->
+<section id="tutor" class="screen">
+
+  <h2>AI Tutor</h2>
+
+  <div class="card">
+
+    <select id="tutorSubject">
+      <option>Mathematics</option>
+      <option>Natural Sciences</option>
+      <option>English</option>
+      <option>Afrikaans</option>
+      <option>Geography</option>
+      <option>History</option>
+      <option>Civil Technology</option>
+      <option>Technology</option>
+      <option>EMS</option>
+      <option>Life Sciences</option>
+      <option>Computer / IT</option>
+      <option>Physical Education</option>
+    </select>
+
+    <div class="chat-box" id="chatBox">
+
+      <div class="message ai">
+        Hi! I'm NEXORA 🧠<br><br>
+
+        Ask me a school question and I'll try to
+        help you understand it.
+      </div>
+
+    </div>
+
+    <input
+      id="questionInput"
+      placeholder="Ask me a question..."
+      onkeydown="if(event.key==='Enter') askTutor()"
+    >
+
+    <button class="primary" onclick="askTutor()">
+      Send Question
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- PRACTICE -->
+<section id="practice" class="screen">
+
+  <h2>Practice</h2>
+
+  <div class="card">
+
+    <h3>⚡ Quick Practice</h3>
+
+    <p class="tip">
+      Complete a practice session to earn XP.
+    </p>
+
+    <button class="primary" onclick="completePractice()">
+      Start Practice
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <h3>🔎 Test Pattern Finder</h3>
+
+    <p class="tip">
+      Paste questions from an old test and NEXORA
+      will look for repeated topics and question patterns.
+    </p>
+
+    <textarea
+      id="testInput"
+      placeholder="Paste your old test questions here..."
+    ></textarea>
+
+    <button class="primary" onclick="analyseTest()">
+      Analyse Test
+    </button>
+
+    <div id="patternResult" class="pattern-result"></div>
+
+  </div>
+
+</section>
+
+
+<!-- STUDY PLANNER -->
+<section id="planner" class="screen">
+
+  <button class="back" onclick="showScreen('home')">
+    ← Back
+  </button>
+
+  <h2>🧠 Smart Study Planner</h2>
+
+  <div class="card">
+
+    <p class="tip">
+      Tell NEXORA what you are preparing for and
+      it will create a study plan.
+    </p>
+
+    <label class="small">Subject</label>
+
+    <select id="planSubject">
+      <option>Mathematics</option>
+      <option>Natural Sciences</option>
+      <option>English</option>
+      <option>Afrikaans</option>
+      <option>Geography</option>
+      <option>History</option>
+      <option>Civil Technology</option>
+      <option>Technology</option>
+      <option>EMS</option>
+      <option>Life Sciences</option>
+      <option>Computer / IT</option>
+      <option>Physical Education</option>
+    </select>
+
+    <label class="small">
+      How many days do you have?
+    </label>
+
+    <input
+      id="planDays"
+      type="number"
+      min="1"
+      placeholder="Example: 7"
+    >
+
+    <label class="small">
+      What are you struggling with?
+    </label>
+
+    <input
+      id="planWeak"
+      placeholder="Example: algebra and fractions"
+    >
+
+    <button class="primary" onclick="createStudyPlan()">
+      Create My Study Plan ⚡
+    </button>
+
+  </div>
+
+  <div id="studyPlanResult"></div>
+
+</section>
+
+
+<!-- PROGRESS -->
+<section id="progress" class="screen">
+
+  <h2>Your Progress</h2>
+
+  <div class="card">
+
+    <h3>🏆 Overall Level</h3>
+
+    <h1 id="progressLevel">Level 1</h1>
+
+    <div class="progress">
+      <div class="progress-bar" id="progressBar2"></div>
+    </div>
+
+    <p class="tip" style="margin-top:10px;">
+      Keep learning to level up your NEXORA character.
+    </p>
+
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      <strong id="progressXP">0</strong>
+      <span>XP</span>
+    </div>
+
+    <div class="stat">
+      <strong>0</strong>
+      <span>Mistakes</span>
+    </div>
+
+    <div class="stat">
+      <strong>0</strong>
+      <span>Tests</span>
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top:15px;">
+
+    <h2>🚀 NEXORA Evolution</h2>
+
+    <p class="tip">
+      As your XP increases, your character will evolve.
+    </p>
+
+    <div class="character" id="progressCharacter">
+      🤖
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- NAVIGATION -->
+<div class="bottom-nav">
+
+  <button class="nav-btn active" onclick="showScreen('home',this)">
+    <span class="nav-icon">🏠</span>
+    Home
+  </button>
+
+  <button class="nav-btn" onclick="showScreen('subjects',this)">
+    <span class="nav-icon">📚</span>
+    Subjects
+  </button>
+
+  <button class="nav-btn" onclick="showScreen('tutor',this)">
+    <span class="nav-icon">🧠</span>
+    Tutor
+  </button>
+
+  <button class="nav-btn" onclick="showScreen('progress',this)">
+    <span class="nav-icon">📈</span>
+    Progress
+  </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   NEXORA SUBJECT DATA
+========================= */
+
+const subjects = [
+
+  {
+    name:"Mathematics",
+    icon:"📐",
+    xp:0,
+    progress:0,
+    weak:["Algebra","Fractions","Problem Solving"],
+    description:"Numbers, algebra, geometry and problem solving."
+  },
+
+  {
+    name:"Natural Sciences",
+    icon:"🔬",
+    xp:0,
+    progress:0,
+    weak:["Forces","Matter","Energy"],
+    description:"Science, experiments, matter, energy and systems."
+  },
+
+  {
+    name:"English",
+    icon:"📖",
+    xp:0,
+    progress:0,
+    weak:["Grammar","Comprehension","Writing"],
+    description:"Language, comprehension, grammar and writing."
+  },
+
+  {
+    name:"Afrikaans",
+    icon:"🗣️",
+    xp:0,
+    progress:0,
+    weak:["Taal","Leesbegrip","Skryfwerk"],
+    description:"Afrikaans language, comprehension and writing."
+  },
+
+  {
+    name:"Geography",
+    icon:"🌍",
+    xp:0,
+    progress:0,
+    weak:["Maps","Climate","Resources"],
+    description:"Maps, climate, environments and human geography."
+  },
+
+  {
+    name:"History",
+    icon:"🏛️",
+    xp:0,
+    progress:0,
+    weak:["Dates","Causes","Source Questions"],
+    description:"Historical events, causes, effects and sources."
+  },
+
+  {
+    name:"Civil Technology",
+    icon:"🏗️",
+    xp:0,
+    progress:0,
+    weak:["Foundations","Concrete","Safety"],
+    description:"Construction, foundations, materials and safety."
+  },
+
+  {
+    name:"Technology",
+    icon:"⚙️",
+    xp:0,
+    progress:0,
+    weak:["Design","Structures","Systems"],
+    description:"Design, structures, systems and technology."
+  },
+
+  {
+    name:"EMS",
+    icon:"💰",
+    xp:0,
+    progress:0,
+    weak:["Business","Economics","Accounting"],
+    description:"Economic and Management Sciences."
+  },
+
+  {
+    name:"Life Sciences",
+    icon:"🧬",
+    xp:0,
+    progress:0,
+    weak:["Cells","Human Systems","Ecology"],
+    description:"Living organisms, cells, systems and ecology."
+  },
+
+  {
+    name:"Computer / IT",
+    icon:"💻",
+    xp:0,
+    progress:0,
+    weak:["Programming","Networks","Algorithms"],
+    description:"Computers, programming, networks and algorithms."
+  },
+
+  {
+    name:"Physical Education",
+    icon:"🏃",
+    xp:0,
+    progress:0,
+    weak:["Fitness","Rules","Training"],
+    description:"Fitness, sports knowledge and physical training."
+  }
+
+];
+
+
+/* =========================
+   PLAYER DATA
+========================= */
+
+let totalXP = 0;
+let level = 1;
+let selectedSubject = null;
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showScreen(id, button) {
+
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  if(button) {
+    button.classList.add("active");
+  }
+
+  window.scrollTo(0,0);
+}
+
+
+/* =========================
+   SUBJECT CARDS
+========================= */
+
+function createSubjectCard(subject) {
+
+  return `
+    <div class="subject" onclick="openSubject('${subject.name}')">
+
+      <div class="subject-icon">
+        ${subject.icon}
+      </div>
+
+      <div class="subject-name">
+        ${subject.name}
+      </div>
+
+      <div class="subject-xp">
+        ${subject.xp} XP
+      </div>
+
+      <div class="subject-bar">
+        <div
+          class="subject-fill"
+          style="width:${subject.progress}%">
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+
+function loadSubjects() {
+
+  document.getElementById("homeSubjects").innerHTML =
+    subjects.slice(0,6).map(createSubjectCard).join("");
+
+  document.getElementById("allSubjects").innerHTML =
+    subjects.map(createSubjectCard).join("");
+}
+
+
+/* =========================
+   OPEN SUBJECT
+========================= */
+
+function openSubject(name) {
+
+  selectedSubject =
+    subjects.find(s => s.name === name);
+
+  if(!selectedSubject) return;
+
+  document.getElementById("dashboardIcon").textContent =
+    selectedSubject.icon;
+
+  document.getElementById("dashboardName").textContent =
+    selectedSubject.name;
+
+  document.getElementById("dashboardDescription").textContent =
+    selectedSubject.description;
+
+  document.getElementById("subjectXP").textContent =
+    selectedSubject.xp + " XP";
+
+  document.getElementById("subjectProgressText").textContent =
+    selectedSubject.progress + "%";
+
+  document.getElementById("subjectProgressBar").style.width =
+    selectedSubject.progress + "%";
+
+  document.getElementById("weakAreas").innerHTML =
+    selectedSubject.weak.map(area =>
+
+      `<div class="pattern">
+        🎯 ${area}
+        <span class="badge">Needs Practice</span>
+      </div>`
+
+    ).join("");
+
+  document.getElementById("progressMessage").textContent =
+
+    selectedSubject.progress === 0
+
+    ? "You haven't started this subject yet. Complete practice to build your progress."
+
+    : "You're making progress. Keep working on your weaker areas.";
+
+  showScreen("subjectDashboard");
+}
+
+
+/* =========================
+   SUBJECT XP
+========================= */
+
+function earnSubjectXP() {
+
+  if(!selectedSubject) return;
+
+  selectedSubject.xp += 20;
+
+  selectedSubject.progress =
+    Math.min(100, selectedSubject.progress + 5);
+
+  addXP(20);
+
+  saveNexoraData();
+
+  openSubject(selectedSubject.name);
+
+  loadSubjects();
+}
+
+
+/* =========================
+   GLOBAL XP
+========================= */
+
+function addXP(amount) {
+
+  totalXP += amount;
+
+  const oldLevel = level;
+
+  level =
+    Math.floor(totalXP / 100) + 1;
+
+  if(level > oldLevel) {
+
+    evolveCharacter();
+
+    alert(
+      "🎉 LEVEL UP! You reached Level "
+      + level
+      + "!"
+    );
+  }
+
+  updateXP();
+
+  saveNexoraData();
+}
+
+
+function updateXP() {
+
+  const currentXP =
+    totalXP % 100;
+
+  document.getElementById("levelText").textContent =
+    "Level " + level;
+
+  document.getElementById("levelNumber").textContent =
+    level;
+
+  document.getElementById("xpText").textContent =
+    currentXP + " / 100 XP";
+
+  document.getElementById("totalXP").textContent =
+    totalXP;
+
+  document.getElementById("progressXP").textContent =
+    totalXP;
+
+  document.getElementById("progressLevel").textContent =
+    "Level " + level;
+
+  document.getElementById("xpBar").style.width =
+    currentXP + "%";
+
+  document.getElementById("progressBar2").style.width =
+    currentXP + "%";
+}
+
+
+/* =========================
+   CHARACTER EVOLUTION
+========================= */
+
+function evolveCharacter() {
+
+  let character = "🤖";
+
+  if(level >= 3) character = "🦾";
+
+  if(level >= 5) character = "🧠";
+
+  if(level >= 8) character = "⚡";
+
+  if(level >= 12) character = "👑";
+
+  document.getElementById("character").textContent =
+    character;
+
+  document.getElementById("progressCharacter").textContent =
+    character;
+}
+
+
+/* =========================
+   SMART STUDY
+========================= */
+
+function smartStudy() {
+
+  const randomSubject =
+    subjects[
+      Math.floor(Math.random() * subjects.length)
+    ];
+
+  openSubject(randomSubject.name);
+
+  alert(
+    "⚡ NEXORA recommends studying "
+    + randomSubject.name
+    + " next."
+  );
+}
+
+
+/* =========================
+   PRACTICE
+========================= */
+
+function completePractice() {
+
+  addXP(20);
+
+  alert(
+    "✅ Practice complete! +20 XP"
+  );
+
+  showScreen("progress");
+}
+
+
+/* =========================
+   AI TUTOR
+========================= */
+
+function askTutor() {
+
+  const input =
+    document.getElementById("questionInput");
+
+  const question =
+    input.value.trim();
+
+  if(!question) return;
+
+  const subject =
+    document.getElementById("tutorSubject").value;
+
+  const chat =
+    document.getElementById("chatBox");
+
+  chat.innerHTML += `
+    <div class="message user">
+      ${escapeHTML(question)}
+    </div>
+  `;
+
+  let answer =
+    "Let's break that down step by step. "
+    + "Tell me which part you find difficult "
+    + "and I'll explain it.";
+
+  const q =
+    question.toLowerCase();
+
+
+  if(q.includes("percent")) {
+
+    answer =
+      "For percentages, remember: "
+      + "percentage = part ÷ whole × 100. "
+      + "Let's work through your exact question step by step.";
+  }
+
+  else if(q.includes("fraction")) {
+
+    answer =
+      "For fractions, first look at whether "
+      + "you need to add, subtract, multiply or divide them. "
+      + "Send me the fraction question and I'll guide you.";
+  }
+
+  else if(
+    q.includes("mean") ||
+    q.includes("average")
+  ) {
+
+    answer =
+      "To find the mean, add all the values together "
+      + "and divide by how many values there are.";
+  }
+
+  else if(
+    q.includes("help") ||
+    q.includes("understand")
+  ) {
+
+    answer =
+      "No problem. 🧠 I'll explain it more simply. "
+      + "Send me the question and tell me what part confused you.";
+  }
+
+
+  chat.innerHTML += `
+
+    <div class="message ai">
+
+      <strong>${subject} Tutor</strong>
+
+      <br><br>
+
+      ${answer}
+
+    </div>
+
+  `;
+
+  input.value = "";
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+  addXP(5);
+}
+
+
+function openTutorFromSubject() {
+
+  if(selectedSubject) {
+
+    document.getElementById("tutorSubject").value =
+      selectedSubject.name;
+
+  }
+
+  showScreen("tutor");
+}
+
+
+/* =========================
+   PATTERN FINDER
+========================= */
+
+function analyseTest() {
+
+  const text =
+    document.getElementById("testInput")
+    .value
+    .toLowerCase();
+
+  if(!text.trim()) {
+
+    alert(
+      "Paste some test questions first."
+    );
+
+    return;
+  }
+
+
+  const patterns = {
+
+    "Percentages":
+      ["percentage","percent","%"],
+
+    "Algebra":
+      ["algebra","equation","solve for x","x ="],
+
+    "Fractions":
+      ["fraction","numerator","denominator"],
+
+    "Data Handling":
+      ["mean","median","mode","range"],
+
+    "Geometry":
+      ["angle","triangle","area","perimeter","volume"],
+
+    "Graphs":
+      ["graph","coordinate","plot"],
+
+    "Definitions":
+      ["define","what is","meaning of"],
+
+    "Explain Questions":
+      ["explain","describe","discuss"],
+
+    "Compare Questions":
+      ["compare","difference","similar"]
+
+  };
+
+
+  let found = [];
+
+
+  for(
+    const pattern in patterns
+  ) {
+
+    const words =
+      patterns[pattern];
+
+    let count = 0;
+
+
+    words.forEach(word => {
+
+      if(text.includes(word)) {
+        count++;
+      }
+
+    });
+
+
+    if(count > 0) {
+
+      found.push({
+        name:pattern,
+        count:count
+      });
+
+    }
+
+  }
+
+
+  let html =
+    "<h3>🔎 Pattern Report</h3>";
+
+
+  if(found.length === 0) {
+
+    html += `
+
+      <div class="pattern">
+
+        I couldn't detect a clear pattern yet.
+        Try pasting more questions.
+
+      </div>
+
+    `;
+
+  }
+
+  else {
+
+    found.sort(
+      (a,b) => b.count - a.count
+    );
+
+
+    found.forEach(item => {
+
+      html += `
+
+        <div class="pattern">
+
+          <strong>
+            ${item.name}
+          </strong>
+
+          <br>
+
+          Detected
+          ${item.count}
+          related pattern(s).
+
+        </div>
+
+      `;
+
+    });
+
+
+    html += `
+
+      <div class="pattern">
+
+        💡 <strong>
+        NEXORA recommendation:
+        </strong>
+
+        <br>
+
+        Focus your next practice session on
+
+        <strong>
+          ${found[0].name}
+        </strong>.
+
+      </div>
+
+    `;
+
+    addXP(15);
+  }
+
+
+  document.getElementById(
+    "patternResult"
+  ).innerHTML = html;
+}
+
+
+/* =========================
+   SMART STUDY PLANNER
+========================= */
+
+function openStudyPlanner() {
+
+  showScreen("planner");
+
+}
+
+
+function createStudyPlan() {
+
+  const subject =
+    document.getElementById(
+      "planSubject"
+    ).value;
+
+  const days =
+    parseInt(
+      document.getElementById(
+        "planDays"
+      ).value
+    );
+
+  const weak =
+    document.getElementById(
+      "planWeak"
+    ).value.trim();
+
+
+  if(!days || days < 1) {
+
+    alert(
+      "Please enter how many days you have left."
+    );
+
+    return;
+  }
+
+
+  let plan = "";
+
+
+  if(days === 1) {
+
+    plan = `
+
+      <div class="pattern">
+
+        <strong>
+          🚨 Emergency Study Plan
+        </strong>
+
+        <br><br>
+
+        1. Review your weakest topics.<br>
+        2. Study important definitions and formulas.<br>
+        3. Complete practice questions.<br>
+        4. Review your mistakes.<br>
+        5. Do a quick final revision.
+
+      </div>
+
+    `;
+
+  }
+
+  else if(days <= 3) {
+
+    plan = `
+
+      <div class="pattern">
+
+        <strong>
+          ⚡ 3-Day Study Plan
+        </strong>
+
+        <br><br>
+
+        <strong>Day 1:</strong>
+        Learn your weakest topics.
+
+        <br>
+
+        <strong>Day 2:</strong>
+        Complete practice questions.
+
+        <br>
+
+        <strong>Day 3:</strong>
+        Do a mini test and review mistakes.
+
+      </div>
+
+    `;
+
+  }
+
+  else {
+
+    const firstDays =
+      Math.max(
+        1,
+        Math.floor(days * 0.4)
+      );
+
+    const practiceDays =
+      Math.max(
+        1,
+        Math.floor(days * 0.4)
+      );
+
+    const finalDays =
+      Math.max(
+        1,
+        days - firstDays - practiceDays
+      );
+
+
+    plan = `
+
+      <div class="pattern">
+
+        <strong>
+          🧠 Your NEXORA Study Plan
+        </strong>
+
+        <br><br>
+
+        <strong>Subject:</strong>
+        ${escapeHTML(subject)}
+
+        <br>
+
+        <strong>Days remaining:</strong>
+        ${days}
+
+        <br><br>
+
+        <strong>
+          📚 Phase 1 — Learn
+        </strong>
+
+        <br>
+
+        Spend about
+        ${firstDays}
+        day(s) learning your weak topics.
+
+        ${
+          weak
+          ? "<br>Focus on: " +
+            escapeHTML(weak)
+          : ""
+        }
+
+        <br><br>
+
+        <strong>
+          ✏️ Phase 2 — Practice
+        </strong>
+
+        <br>
+
+        Spend about
+        ${practiceDays}
+        day(s) doing questions and
+        practising the methods you struggle with.
+
+        <br><br>
+
+        <strong>
+          🏆 Phase 3 — Exam Mode
+        </strong>
+
+        <br>
+
+        Spend about
+        ${finalDays}
+        day(s) doing revision,
+        correcting mistakes and testing yourself.
+
+      </div>
+
+    `;
+
+  }
+
+
+  document.getElementById(
+    "studyPlanResult"
+  ).innerHTML = plan;
+
+
+  addXP(10);
+
+}
+
+
+/* =========================
+   SAVE NEXORA PROGRESS
+========================= */
+
+function saveNexoraData() {
+
+  const saveData = {
+
+    totalXP: totalXP,
+
+    level: level,
+
+    subjects: subjects
+
+  };
+
+
+  localStorage.setItem(
+
+    "nexoraProgress",
+
+    JSON.stringify(saveData)
+
+  );
+
+}
+
+
+/* =========================
+   LOAD NEXORA PROGRESS
+========================= */
+
+function loadNexoraData() {
+
+  const saved =
+    localStorage.getItem(
+      "nexoraProgress"
+    );
+
+
+  if(!saved) {
+    return;
+  }
+
+
+  try {
+
+    const data =
+      JSON.parse(saved);
+
+
+    if(
+      typeof data.totalXP === "number"
+    ) {
+
+      totalXP =
+        data.totalXP;
+
+    }
+
+
+    if(
+      typeof data.level === "number"
+    ) {
+
+      level =
+        data.level;
+
+    }
+
+
+    if(
+      Array.isArray(data.subjects)
+    ) {
+
+      data.subjects.forEach(
+        savedSubject => {
+
+          const currentSubject =
+            subjects.find(
+              subject =>
+                subject.name ===
+                savedSubject.name
+            );
+
+
+          if(currentSubject) {
+
+            currentSubject.xp =
+              savedSubject.xp || 0;
+
+            currentSubject.progress =
+              savedSubject.progress || 0;
+
+          }
+
+        }
+      );
+
+    }
+
+  }
+
+  catch(error) {
+
+    console.log(
+      "NEXORA could not load saved progress."
+    );
+
+  }
+
+}
+
+
+/* =========================
+   AUTO SAVE
+========================= */
+
+setInterval(
+  function() {
+
+    saveNexoraData();
+
+  },
+  5000
+);
+
+
+/* =========================
+   SAVE WHEN LEAVING
+========================= */
+
+window.addEventListener(
+  "beforeunload",
+  function() {
+
+    saveNexoraData();
+
+  }
+);
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(text) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    text;
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================
+   START NEXORA
+========================= */
+
+loadNexoraData();
+
+loadSubjects();
+
+updateXP();
+
+evolveCharacter();
+
+</script>
+
+</body>
+</html>
