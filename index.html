@@ -41,6 +41,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
 .logo {
@@ -51,6 +52,26 @@ header {
 
 .logo span {
   color: #7c5cff;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.install-btn {
+  background: linear-gradient(90deg,#7c5cff,#5b8cff);
+  color: white;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(124, 92, 255, 0.35);
+}
+
+.install-btn[hidden] {
+  display: none;
 }
 
 .profile {
@@ -351,7 +372,10 @@ label {
 
 <header>
   <div class="logo">NEX<span>ORA</span></div>
-  <div class="profile">🧠</div>
+  <div class="header-actions">
+    <button id="installBtn" class="install-btn" hidden>Install App</button>
+    <div class="profile">🧠</div>
+  </div>
 </header>
 
 <!-- HOME -->
@@ -597,7 +621,7 @@ label {
     ← Back
   </button>
 
-  <h2>🧠 Smart Study Planner</h2>
+  <h2>��� Smart Study Planner</h2>
 
   <div class="card">
 
@@ -1138,6 +1162,33 @@ function loadNexoraData() {
   loadSubjects();
   addXP(0);
 }
+
+const installBtn = document.getElementById('installBtn');
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredPrompt = event;
+  installBtn.hidden = false;
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if (outcome === 'accepted') {
+    console.log('NEXORA installed successfully');
+  }
+
+  deferredPrompt = null;
+  installBtn.hidden = true;
+});
+
+window.addEventListener('appinstalled', () => {
+  installBtn.hidden = true;
+});
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
