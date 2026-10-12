@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="NEXORA app icon">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#7c5cff"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="#080b14"/>
+  <rect x="52" y="52" width="408" height="408" rx="92" fill="url(#bg)" opacity="0.95"/>
+  <path d="M180 332V180h48c54 0 84 34 84 76 0 42-30 76-84 76h-48zm48-30h12c24 0 38-16 38-40s-14-40-38-40h-12v80z" fill="#fff"/>
+  <path d="M252 180h56l52 152h-42l-10-30h-48l-10 30h-42l52-152zm18 94h26l-13-40-13 40z" fill="#fff" opacity="0.96"/>
+  <circle cx="378" cy="164" r="22" fill="#ffffff" opacity="0.92"/>
+</svg>

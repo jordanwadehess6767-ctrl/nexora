@@ -428,6 +428,53 @@ label {
   background: #1d273a;
   color: white;
 }
+
+.daily-card {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #171126, #0d111c);
+  border: 1px solid #7c3aed;
+  box-shadow: 0 0 25px rgba(124,58,237,.2);
+}
+
+.daily-card h2 {
+  margin-top: 0;
+  color: #ffffff;
+}
+
+.daily-question {
+  font-size: 18px;
+  margin: 15px 0;
+  line-height: 1.5;
+}
+
+.challenge-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #7c3aed;
+  color: white;
+}
+
+.challenge-btn:hover {
+  transform: scale(1.03);
+}
+
+.challenge-result {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.streak-box {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #111827;
+}
 </style>
 </head>
 
@@ -455,7 +502,6 @@ label {
   </div>
 </header>
 
-<!-- HOME -->
 <section id="home" class="screen active">
 
   <div class="hero">
@@ -472,6 +518,20 @@ label {
 
     <div class="progress">
       <div class="progress-bar" id="xpBar"></div>
+    </div>
+  </div>
+
+  <div class="daily-card">
+    <h2>🔥 Daily Challenge</h2>
+    <div class="daily-question" id="dailyQuestion">Loading today's challenge...</div>
+    <div id="dailyAnswers"></div>
+    <div class="challenge-result" id="challengeResult"></div>
+    <div class="streak-box">
+      🔥 Study Streak:
+      <strong><span id="streakNumber">0</span> days</strong>
+      <br>
+      ⭐ Challenge XP:
+      <strong><span id="challengeXP">0</span> XP</strong>
     </div>
   </div>
 
@@ -518,43 +578,27 @@ label {
   </div>
 
   <h2>My Subjects</h2>
-
   <div class="subject-grid" id="homeSubjects"></div>
 
 </section>
 
-
-<!-- SUBJECTS -->
 <section id="subjects" class="screen">
-
   <h2>My Subjects</h2>
 
   <div class="card">
-    <p class="tip">
-      Choose a subject to open its personal learning dashboard.
-    </p>
+    <p class="tip">Choose a subject to open its personal learning dashboard.</p>
   </div>
 
   <div class="subject-grid" id="allSubjects"></div>
-
 </section>
 
-
-<!-- SUBJECT DASHBOARD -->
 <section id="subjectDashboard" class="screen">
-
-  <button class="back" onclick="showScreen('subjects')">
-    ← Back to Subjects
-  </button>
+  <button class="back" onclick="showScreen('subjects')">← Back to Subjects</button>
 
   <div class="hero">
     <div class="subject-icon" id="dashboardIcon">📚</div>
-
     <h1 id="dashboardName">Mathematics</h1>
-
-    <p class="small" id="dashboardDescription">
-      Your personal learning dashboard.
-    </p>
+    <p class="small" id="dashboardDescription">Your personal learning dashboard.</p>
 
     <div class="xp-row">
       <span id="subjectXP">0 XP</span>
@@ -573,39 +617,22 @@ label {
 
   <div class="card">
     <h2>📈 Your Progress</h2>
+    <p class="tip" id="progressMessage">Start studying to build your subject progress.</p>
 
-    <p class="tip" id="progressMessage">
-      Start studying to build your subject progress.
-    </p>
-
-    <button class="primary" onclick="earnSubjectXP()">
-      Complete Practice +20 XP
-    </button>
-
-    <button class="secondary" onclick="openTutorFromSubject()">
-      Ask NEXORA Tutor
-    </button>
+    <button class="primary" onclick="earnSubjectXP()">Complete Practice +20 XP</button>
+    <button class="secondary" onclick="openTutorFromSubject()">Ask NEXORA Tutor</button>
   </div>
 
   <div class="card">
     <h2>🧠 Coming Soon</h2>
-
-    <p class="tip">
-      NEXORA will analyse your old tests and find repeated
-      question patterns and methods for this subject.
-    </p>
+    <p class="tip">NEXORA will analyse your old tests and find repeated question patterns and methods for this subject.</p>
   </div>
-
 </section>
 
-
-<!-- TUTOR -->
 <section id="tutor" class="screen">
-
   <h2>AI Tutor</h2>
 
   <div class="card">
-
     <select id="tutorSubject">
       <option>Mathematics</option>
       <option>Natural Sciences</option>
@@ -622,93 +649,40 @@ label {
     </select>
 
     <div class="chat-box" id="chatBox">
-
-      <div class="message ai">
-        Hi! I'm NEXORA 🧠<br><br>
-
-        Ask me a school question and I'll try to
-        help you understand it.
-      </div>
-
+      <div class="message ai">Hi! I'm NEXORA 🧠<br><br>Ask me a school question and I'll try to help you understand it.</div>
     </div>
 
-    <input
-      id="questionInput"
-      placeholder="Ask me a question..."
-      onkeydown="if(event.key==='Enter') askTutor()"
-    >
-
-    <button class="primary" onclick="askTutor()">
-      Send Question
-    </button>
-
+    <input id="questionInput" placeholder="Ask me a question..." onkeydown="if(event.key==='Enter') askTutor()">
+    <button class="primary" onclick="askTutor()">Send Question</button>
   </div>
-
 </section>
 
-
-<!-- PRACTICE -->
 <section id="practice" class="screen">
-
   <h2>Practice</h2>
 
   <div class="card">
-
     <h3>⚡ Quick Practice</h3>
-
-    <p class="tip">
-      Complete a practice session to earn XP.
-    </p>
-
-    <button class="primary" onclick="completePractice()">
-      Start Practice
-    </button>
-
+    <p class="tip">Complete a practice session to earn XP.</p>
+    <button class="primary" onclick="completePractice()">Start Practice</button>
   </div>
 
   <div class="card">
-
     <h3>🔎 Test Pattern Finder</h3>
-
-    <p class="tip">
-      Paste questions from an old test and NEXORA
-      will look for repeated topics and question patterns.
-    </p>
-
-    <textarea
-      id="testInput"
-      placeholder="Paste your old test questions here..."
-    ></textarea>
-
-    <button class="primary" onclick="analyseTest()">
-      Analyse Test
-    </button>
-
+    <p class="tip">Paste questions from an old test and NEXORA will look for repeated topics and question patterns.</p>
+    <textarea id="testInput" placeholder="Paste your old test questions here..."></textarea>
+    <button class="primary" onclick="analyseTest()">Analyse Test</button>
     <div id="patternResult" class="pattern-result"></div>
-
   </div>
-
 </section>
 
-
-<!-- STUDY PLANNER -->
 <section id="planner" class="screen">
-
-  <button class="back" onclick="showScreen('home')">
-    ← Back
-  </button>
-
+  <button class="back" onclick="showScreen('home')">← Back</button>
   <h2>🧠 Smart Study Planner</h2>
 
   <div class="card">
-
-    <p class="tip">
-      Tell NEXORA what you are preparing for and
-      it will create a study plan.
-    </p>
+    <p class="tip">Tell NEXORA what you are preparing for and it will create a study plan.</p>
 
     <label class="small">Subject</label>
-
     <select id="planSubject">
       <option>Mathematics</option>
       <option>Natural Sciences</option>
@@ -724,60 +698,33 @@ label {
       <option>Physical Education</option>
     </select>
 
-    <label class="small">
-      How many days do you have?
-    </label>
+    <label class="small">How many days do you have?</label>
+    <input id="planDays" type="number" min="1" placeholder="Example: 7">
 
-    <input
-      id="planDays"
-      type="number"
-      min="1"
-      placeholder="Example: 7"
-    >
+    <label class="small">What are you struggling with?</label>
+    <input id="planWeak" placeholder="Example: algebra and fractions">
 
-    <label class="small">
-      What are you struggling with?
-    </label>
-
-    <input
-      id="planWeak"
-      placeholder="Example: algebra and fractions"
-    >
-
-    <button class="primary" onclick="createStudyPlan()">
-      Create My Study Plan ⚡
-    </button>
-
+    <button class="primary" onclick="createStudyPlan()">Create My Study Plan ⚡</button>
   </div>
 
   <div id="studyPlanResult"></div>
-
 </section>
 
-
-<!-- PROGRESS -->
 <section id="progress" class="screen">
-
   <h2>Your Progress</h2>
 
   <div class="card">
-
     <h3>🏆 Overall Level</h3>
-
     <h1 id="progressLevel">Level 1</h1>
 
     <div class="progress">
       <div class="progress-bar" id="progressBar2"></div>
     </div>
 
-    <p class="tip" style="margin-top:10px;">
-      Keep learning to level up your NEXORA character.
-    </p>
-
+    <p class="tip" style="margin-top:10px;">Keep learning to level up your NEXORA character.</p>
   </div>
 
   <div class="stats">
-
     <div class="stat">
       <strong id="progressXP">0</strong>
       <span>XP</span>
@@ -792,320 +739,100 @@ label {
       <strong>0</strong>
       <span>Tests</span>
     </div>
-
   </div>
 
   <div class="card" style="margin-top:15px;">
-
     <h2>🚀 NEXORA Evolution</h2>
-
-    <p class="tip">
-      As your XP increases, your character will evolve.
-    </p>
-
-    <div class="character" id="progressCharacter">
-      🤖
-    </div>
-
+    <p class="tip">As your XP increases, your character will evolve.</p>
+    <div class="character" id="progressCharacter">🤖</div>
   </div>
-
 </section>
 
-
-<!-- NAVIGATION -->
 <div class="bottom-nav">
-
-  <button class="nav-btn active" onclick="showScreen('home',this)">
-    <span class="nav-icon">🏠</span>
-    Home
-  </button>
-
-  <button class="nav-btn" onclick="showScreen('subjects',this)">
-    <span class="nav-icon">📚</span>
-    Subjects
-  </button>
-
-  <button class="nav-btn" onclick="showScreen('tutor',this)">
-    <span class="nav-icon">🧠</span>
-    Tutor
-  </button>
-
-  <button class="nav-btn" onclick="showScreen('progress',this)">
-    <span class="nav-icon">📈</span>
-    Progress
-  </button>
-
+  <button class="nav-btn active" onclick="showScreen('home',this)"><span class="nav-icon">🏠</span>Home</button>
+  <button class="nav-btn" onclick="showScreen('subjects',this)"><span class="nav-icon">📚</span>Subjects</button>
+  <button class="nav-btn" onclick="showScreen('tutor',this)"><span class="nav-icon">🧠</span>Tutor</button>
+  <button class="nav-btn" onclick="showScreen('progress',this)"><span class="nav-icon">📈</span>Progress</button>
 </div>
 
 </div>
-
 
 <script>
-
-/* =========================
-   NEXORA SUBJECT DATA
-========================= */
-
 const subjects = [
-
-  {
-    name:"Mathematics",
-    icon:"📐",
-    xp:0,
-    progress:0,
-    weak:["Algebra","Fractions","Problem Solving"],
-    description:"Numbers, algebra, geometry and problem solving."
-  },
-
-  {
-    name:"Natural Sciences",
-    icon:"🔬",
-    xp:0,
-    progress:0,
-    weak:["Forces","Matter","Energy"],
-    description:"Science, experiments, matter, energy and systems."
-  },
-
-  {
-    name:"English",
-    icon:"📖",
-    xp:0,
-    progress:0,
-    weak:["Grammar","Comprehension","Writing"],
-    description:"Language, comprehension, grammar and writing."
-  },
-
-  {
-    name:"Afrikaans",
-    icon:"🗣️",
-    xp:0,
-    progress:0,
-    weak:["Taal","Leesbegrip","Skryfwerk"],
-    description:"Afrikaans language, comprehension and writing."
-  },
-
-  {
-    name:"Geography",
-    icon:"🌍",
-    xp:0,
-    progress:0,
-    weak:["Maps","Climate","Resources"],
-    description:"Maps, climate, environments and human geography."
-  },
-
-  {
-    name:"History",
-    icon:"🏛️",
-    xp:0,
-    progress:0,
-    weak:["Dates","Causes","Source Questions"],
-    description:"Historical events, causes, effects and sources."
-  },
-
-  {
-    name:"Civil Technology",
-    icon:"🏗️",
-    xp:0,
-    progress:0,
-    weak:["Foundations","Concrete","Safety"],
-    description:"Construction, foundations, materials and safety."
-  },
-
-  {
-    name:"Technology",
-    icon:"⚙️",
-    xp:0,
-    progress:0,
-    weak:["Design","Structures","Systems"],
-    description:"Design, structures, systems and technology."
-  },
-
-  {
-    name:"EMS",
-    icon:"💰",
-    xp:0,
-    progress:0,
-    weak:["Business","Economics","Accounting"],
-    description:"Economic and Management Sciences."
-  },
-
-  {
-    name:"Life Sciences",
-    icon:"🧬",
-    xp:0,
-    progress:0,
-    weak:["Cells","Human Systems","Ecology"],
-    description:"Living organisms, cells, systems and ecology."
-  },
-
-  {
-    name:"Computer / IT",
-    icon:"💻",
-    xp:0,
-    progress:0,
-    weak:["Programming","Networks","Algorithms"],
-    description:"Computers, programming, networks and algorithms."
-  },
-
-  {
-    name:"Physical Education",
-    icon:"🏃",
-    xp:0,
-    progress:0,
-    weak:["Fitness","Rules","Training"],
-    description:"Fitness, sports knowledge and physical training."
-  }
-
+  { name:"Mathematics", icon:"📐", xp:0, progress:0, weak:["Algebra","Fractions","Problem Solving"], description:"Numbers, algebra, geometry and problem solving." },
+  { name:"Natural Sciences", icon:"🔬", xp:0, progress:0, weak:["Forces","Matter","Energy"], description:"Science, experiments, matter, energy and systems." },
+  { name:"English", icon:"📖", xp:0, progress:0, weak:["Grammar","Comprehension","Writing"], description:"Language, comprehension, grammar and writing." },
+  { name:"Afrikaans", icon:"🗣️", xp:0, progress:0, weak:["Taal","Leesbegrip","Skryfwerk"], description:"Afrikaans language, comprehension and writing." },
+  { name:"Geography", icon:"🌍", xp:0, progress:0, weak:["Maps","Climate","Resources"], description:"Maps, climate, environments and human geography." },
+  { name:"History", icon:"🏛️", xp:0, progress:0, weak:["Dates","Causes","Source Questions"], description:"Historical events, causes, effects and sources." },
+  { name:"Civil Technology", icon:"🏗️", xp:0, progress:0, weak:["Foundations","Concrete","Safety"], description:"Construction, foundations, materials and safety." },
+  { name:"Technology", icon:"⚙️", xp:0, progress:0, weak:["Design","Structures","Systems"], description:"Design, structures, systems and technology." },
+  { name:"EMS", icon:"💰", xp:0, progress:0, weak:["Business","Economics","Accounting"], description:"Economic and Management Sciences." },
+  { name:"Life Sciences", icon:"🧬", xp:0, progress:0, weak:["Cells","Human Systems","Ecology"], description:"Living organisms, cells, systems and ecology." },
+  { name:"Computer / IT", icon:"💻", xp:0, progress:0, weak:["Programming","Networks","Algorithms"], description:"Computers, programming, networks and algorithms." },
+  { name:"Physical Education", icon:"🏃", xp:0, progress:0, weak:["Fitness","Rules","Training"], description:"Fitness, sports knowledge and physical training." }
 ];
-
-
-/* =========================
-   PLAYER DATA
-========================= */
 
 let totalXP = 0;
 let level = 1;
 let selectedSubject = null;
 
-
-/* =========================
-   NAVIGATION
-========================= */
-
 function showScreen(id, button) {
-
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.remove("active");
-  });
-
+  document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 
-  document.querySelectorAll(".nav-btn").forEach(btn => {
-    btn.classList.remove("active");
-  });
-
-  if(button) {
-    button.classList.add("active");
-  }
-
-  window.scrollTo(0,0);
+  document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+  if (button) button.classList.add("active");
+  window.scrollTo(0, 0);
 }
 
-
-/* =========================
-   SUBJECT CARDS
-========================= */
-
 function createSubjectCard(subject) {
-
   return `
     <div class="subject" onclick="openSubject('${subject.name}')">
-
-      <div class="subject-icon">
-        ${subject.icon}
-      </div>
-
-      <div class="subject-name">
-        ${subject.name}
-      </div>
-
-      <div class="subject-xp">
-        ${subject.xp} XP
-      </div>
-
-      <div class="subject-bar">
-        <div
-          class="subject-fill"
-          style="width:${subject.progress}%">
-        </div>
-      </div>
-
+      <div class="subject-icon">${subject.icon}</div>
+      <div class="subject-name">${subject.name}</div>
+      <div class="subject-xp">${subject.xp} XP</div>
+      <div class="subject-bar"><div class="subject-fill" style="width:${subject.progress}%"></div></div>
     </div>
   `;
 }
 
-
 function loadSubjects() {
-
-  document.getElementById("homeSubjects").innerHTML =
-    subjects.slice(0,6).map(createSubjectCard).join("");
-
-  document.getElementById("allSubjects").innerHTML =
-    subjects.map(createSubjectCard).join("");
+  document.getElementById("homeSubjects").innerHTML = subjects.slice(0,6).map(createSubjectCard).join("");
+  document.getElementById("allSubjects").innerHTML = subjects.map(createSubjectCard).join("");
 }
 
-
-/* =========================
-   OPEN SUBJECT
-========================= */
-
 function openSubject(name) {
+  selectedSubject = subjects.find(s => s.name === name);
+  if (!selectedSubject) return;
 
-  selectedSubject =
-    subjects.find(s => s.name === name);
+  document.getElementById("dashboardIcon").textContent = selectedSubject.icon;
+  document.getElementById("dashboardName").textContent = selectedSubject.name;
+  document.getElementById("dashboardDescription").textContent = selectedSubject.description;
+  document.getElementById("subjectXP").textContent = selectedSubject.xp + " XP";
+  document.getElementById("subjectProgressText").textContent = selectedSubject.progress + "%";
+  document.getElementById("subjectProgressBar").style.width = selectedSubject.progress + "%";
 
-  if(!selectedSubject) return;
+  document.getElementById("weakAreas").innerHTML = selectedSubject.weak.map(area =>
+    `<div class="pattern">🎯 ${area}<span class="badge">Needs Practice</span></div>`
+  ).join("");
 
-  document.getElementById("dashboardIcon").textContent =
-    selectedSubject.icon;
-
-  document.getElementById("dashboardName").textContent =
-    selectedSubject.name;
-
-  document.getElementById("dashboardDescription").textContent =
-    selectedSubject.description;
-
-  document.getElementById("subjectXP").textContent =
-    selectedSubject.xp + " XP";
-
-  document.getElementById("subjectProgressText").textContent =
-    selectedSubject.progress + "%";
-
-  document.getElementById("subjectProgressBar").style.width =
-    selectedSubject.progress + "%";
-
-  document.getElementById("weakAreas").innerHTML =
-    selectedSubject.weak.map(area =>
-
-      `<div class="pattern">
-        🎯 ${area}
-        <span class="badge">Needs Practice</span>
-      </div>`
-
-    ).join("");
-
-  document.getElementById("progressMessage").textContent =
-
-    selectedSubject.progress === 0
-
+  document.getElementById("progressMessage").textContent = selectedSubject.progress === 0
     ? "You haven't started this subject yet. Complete practice to build your progress."
-
     : "You're making progress. Keep working on your weaker areas.";
 
   showScreen("subjectDashboard");
 }
 
-
-/* =========================
-   SUBJECT XP
-========================= */
-
 function earnSubjectXP() {
-
-  if(!selectedSubject) return;
+  if (!selectedSubject) return;
 
   selectedSubject.xp += 20;
-
-  selectedSubject.progress =
-    Math.min(100, selectedSubject.progress + 5);
-
+  selectedSubject.progress = Math.min(100, selectedSubject.progress + 5);
   addXP(20);
-
   saveNexoraData();
-
   openSubject(selectedSubject.name);
 }
-
 
 function addXP(amount) {
   totalXP += amount;
@@ -1123,18 +850,16 @@ function addXP(amount) {
   document.getElementById("progressXP").textContent = totalXP;
 }
 
-
 function completePractice() {
   addXP(25);
   selectedSubject = subjects[0];
-  if(selectedSubject) {
+  if (selectedSubject) {
     selectedSubject.xp += 25;
     selectedSubject.progress = Math.min(100, selectedSubject.progress + 10);
   }
   saveNexoraData();
   openSubject(selectedSubject.name);
 }
-
 
 function openStudyPlanner() {
   showScreen('planner');
@@ -1145,8 +870,7 @@ function createStudyPlan() {
   const days = document.getElementById("planDays").value || 7;
   const weak = document.getElementById("planWeak").value || "core concepts";
 
-  const result = document.getElementById("studyPlanResult");
-  result.innerHTML = `
+  document.getElementById("studyPlanResult").innerHTML = `
     <div class="card">
       <h3>📘 Study Plan for ${subject}</h3>
       <p class="tip">
@@ -1164,7 +888,7 @@ function analyseTest() {
   const text = document.getElementById("testInput").value.trim();
   const result = document.getElementById("patternResult");
 
-  if(!text) {
+  if (!text) {
     result.innerHTML = `<div class="pattern">Add some test questions first.</div>`;
     return;
   }
@@ -1172,7 +896,7 @@ function analyseTest() {
   const topics = ["algebra", "fractions", "reading", "grammar", "maps", "energy", "cells", "equations"];
   const found = topics.filter(topic => text.toLowerCase().includes(topic));
 
-  if(!found.length) {
+  if (!found.length) {
     result.innerHTML = `<div class="pattern">No clear patterns found yet. Try adding more detail from your test.</div>`;
     return;
   }
@@ -1190,7 +914,7 @@ function askTutor() {
   const question = document.getElementById("questionInput").value.trim();
   const chatBox = document.getElementById("chatBox");
 
-  if(!question) {
+  if (!question) {
     chatBox.innerHTML += `<div class="message user">Please type a question.</div>`;
     return;
   }
@@ -1199,7 +923,6 @@ function askTutor() {
   document.getElementById("questionInput").value = "";
 
   const answer = `For ${subject}, the best place to start is to break the question into steps and identify the key idea. Try a simple example first, then apply the method to your question.`;
-
   chatBox.innerHTML += `<div class="message ai">${answer}</div>`;
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -1219,16 +942,16 @@ function saveNexoraData() {
 
 function loadNexoraData() {
   const saved = localStorage.getItem('nexoraData');
-  if(!saved) {
+  if (!saved) {
     loadSubjects();
     return;
   }
 
   try {
     const data = JSON.parse(saved);
-    if(data.totalXP) totalXP = data.totalXP;
-    if(data.level) level = data.level;
-    if(data.subjects) {
+    if (data.totalXP) totalXP = data.totalXP;
+    if (data.level) level = data.level;
+    if (data.subjects) {
       subjects.length = 0;
       data.subjects.forEach(subject => subjects.push(subject));
     }
@@ -1276,12 +999,12 @@ window.addEventListener('beforeinstallprompt', (event) => {
   showInstallModal();
 });
 
-installBtn.addEventListener('click', triggerInstall);
-modalInstallBtn.addEventListener('click', triggerInstall);
-modalDismissBtn.addEventListener('click', hideInstallModal);
+installBtn && installBtn.addEventListener('click', triggerInstall);
+modalInstallBtn && modalInstallBtn.addEventListener('click', triggerInstall);
+modalDismissBtn && modalDismissBtn.addEventListener('click', hideInstallModal);
 
 window.addEventListener('appinstalled', () => {
-  installBtn.hidden = true;
+  installBtn && (installBtn.hidden = true);
   hideInstallModal();
 });
 
@@ -1291,8 +1014,82 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-loadNexoraData();
+const challenges = [
+  { question: "What is 12 × 8?", answers: ["86", "96", "108", "112"], correct: "96" },
+  { question: "What planet is known as the Red Planet?", answers: ["Earth", "Mars", "Jupiter", "Venus"], correct: "Mars" },
+  { question: "What is the process plants use to make food?", answers: ["Respiration", "Photosynthesis", "Digestion", "Evaporation"], correct: "Photosynthesis" },
+  { question: "What is the capital city of South Africa?", answers: ["Cape Town", "Johannesburg", "Pretoria", "Durban"], correct: "Pretoria" },
+  { question: "What is 100 ÷ 4?", answers: ["20", "25", "30", "40"], correct: "25" }
+];
 
+const todayKey = new Date().toISOString().slice(0, 10);
+const challengeStateKey = 'nexoraChallengeState';
+let challengeState = JSON.parse(localStorage.getItem(challengeStateKey) || '{}');
+
+if (!challengeState.date || challengeState.date !== todayKey) {
+  challengeState = { date: todayKey, completed: false };
+  localStorage.setItem(challengeStateKey, JSON.stringify(challengeState));
+}
+
+let challengeXP = Number(localStorage.getItem('nexoraChallengeXP')) || 0;
+let challengeStreak = Number(localStorage.getItem('nexoraStreak')) || 0;
+let completed = Boolean(challengeState.completed);
+const challenge = challenges[new Date().getDate() % challenges.length];
+
+function renderDailyChallenge() {
+  const questionEl = document.getElementById('dailyQuestion');
+  const answersEl = document.getElementById('dailyAnswers');
+  const resultEl = document.getElementById('challengeResult');
+
+  questionEl.textContent = challenge.question;
+  resultEl.textContent = '';
+  answersEl.innerHTML = '';
+
+  if (completed) {
+    answersEl.innerHTML = '<p>✅ You already completed today\'s challenge!</p>';
+    questionEl.textContent = "Come back tomorrow for a new challenge.";
+    return;
+  }
+
+  challenge.answers.forEach(answer => {
+    const button = document.createElement('button');
+    button.className = 'challenge-btn';
+    button.type = 'button';
+    button.textContent = answer;
+    button.setAttribute('aria-label', `Answer ${answer}`);
+
+    button.onclick = function() {
+      if (answer === challenge.correct) {
+        challengeXP += 25;
+        challengeStreak += 1;
+
+        challengeState.completed = true;
+        challengeState.date = todayKey;
+        localStorage.setItem(challengeStateKey, JSON.stringify(challengeState));
+        localStorage.setItem('nexoraChallengeXP', String(challengeXP));
+        localStorage.setItem('nexoraStreak', String(challengeStreak));
+
+        addXP(25);
+        saveNexoraData();
+
+        resultEl.textContent = '🎉 Correct! +25 XP';
+        document.getElementById('challengeXP').textContent = challengeXP;
+        document.getElementById('streakNumber').textContent = challengeStreak;
+        answersEl.innerHTML = '<p>🏆 Challenge completed!</p>';
+        completed = true;
+      } else {
+        resultEl.textContent = '❌ Not quite. Try again!';
+      }
+    };
+
+    answersEl.appendChild(button);
+  });
+}
+
+document.getElementById('challengeXP').textContent = challengeXP;
+document.getElementById('streakNumber').textContent = challengeStreak;
+renderDailyChallenge();
+loadNexoraData();
 </script>
 
 </body>
