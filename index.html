@@ -363,10 +363,87 @@ label {
   font-size: 11px;
   margin-top: 5px;
 }
+
+.install-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 11, 20, 0.72);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+.install-modal.show {
+  display: flex;
+}
+
+.modal-card {
+  width: min(420px, calc(100% - 24px));
+  background: #111827;
+  border: 1px solid #2a3552;
+  border-radius: 20px;
+  padding: 22px 18px 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.modal-icon {
+  font-size: 52px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.modal-card h3 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.modal-card p {
+  text-align: center;
+  color: #b7c2d9;
+  line-height: 1.5;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.modal-primary {
+  background: linear-gradient(90deg,#7c5cff,#5b8cff);
+  color: white;
+}
+
+.modal-secondary {
+  background: #1d273a;
+  color: white;
+}
 </style>
 </head>
 
 <body>
+
+<div id="installModal" class="install-modal" aria-live="polite">
+  <div class="modal-card">
+    <div class="modal-icon">📲</div>
+    <h3>Install NEXORA</h3>
+    <p>Install this app to keep learning on the go and access it like a native app.</p>
+    <div class="modal-actions">
+      <button id="modalInstallBtn" class="modal-primary">Install</button>
+      <button id="modalDismissBtn" class="modal-secondary">Not now</button>
+    </div>
+  </div>
+</div>
 
 <div class="app">
 
@@ -621,7 +698,7 @@ label {
     ← Back
   </button>
 
-  <h2>��� Smart Study Planner</h2>
+  <h2>🧠 Smart Study Planner</h2>
 
   <div class="card">
 
@@ -1164,15 +1241,20 @@ function loadNexoraData() {
 }
 
 const installBtn = document.getElementById('installBtn');
+const installModal = document.getElementById('installModal');
+const modalInstallBtn = document.getElementById('modalInstallBtn');
+const modalDismissBtn = document.getElementById('modalDismissBtn');
 let deferredPrompt = null;
 
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
-  installBtn.hidden = false;
-});
+function showInstallModal() {
+  installModal.classList.add('show');
+}
 
-installBtn.addEventListener('click', async () => {
+function hideInstallModal() {
+  installModal.classList.remove('show');
+}
+
+async function triggerInstall() {
   if (!deferredPrompt) return;
 
   deferredPrompt.prompt();
@@ -1184,10 +1266,23 @@ installBtn.addEventListener('click', async () => {
 
   deferredPrompt = null;
   installBtn.hidden = true;
+  hideInstallModal();
+}
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredPrompt = event;
+  installBtn.hidden = false;
+  showInstallModal();
 });
+
+installBtn.addEventListener('click', triggerInstall);
+modalInstallBtn.addEventListener('click', triggerInstall);
+modalDismissBtn.addEventListener('click', hideInstallModal);
 
 window.addEventListener('appinstalled', () => {
   installBtn.hidden = true;
+  hideInstallModal();
 });
 
 if ('serviceWorker' in navigator) {
