@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEXORA - AI Learning Coach</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon.svg">
 
 <style>
 * {
@@ -998,777 +1003,149 @@ function earnSubjectXP() {
   saveNexoraData();
 
   openSubject(selectedSubject.name);
-
-  loadSubjects();
 }
 
-
-/* =========================
-   GLOBAL XP
-========================= */
 
 function addXP(amount) {
-
   totalXP += amount;
+  level = Math.floor(totalXP / 100) + 1;
 
-  const oldLevel = level;
+  document.getElementById("totalXP").textContent = totalXP;
+  document.getElementById("levelNumber").textContent = level;
+  document.getElementById("levelText").textContent = "Level " + level;
+  document.getElementById("xpText").textContent = totalXP + " / 100 XP";
 
-  level =
-    Math.floor(totalXP / 100) + 1;
-
-  if(level > oldLevel) {
-
-    evolveCharacter();
-
-    alert(
-      "🎉 LEVEL UP! You reached Level "
-      + level
-      + "!"
-    );
-  }
-
-  updateXP();
-
-  saveNexoraData();
+  const barWidth = (totalXP % 100) + "%";
+  document.getElementById("xpBar").style.width = barWidth;
+  document.getElementById("progressBar2").style.width = (totalXP % 100) + "%";
+  document.getElementById("progressLevel").textContent = "Level " + level;
+  document.getElementById("progressXP").textContent = totalXP;
 }
 
-
-function updateXP() {
-
-  const currentXP =
-    totalXP % 100;
-
-  document.getElementById("levelText").textContent =
-    "Level " + level;
-
-  document.getElementById("levelNumber").textContent =
-    level;
-
-  document.getElementById("xpText").textContent =
-    currentXP + " / 100 XP";
-
-  document.getElementById("totalXP").textContent =
-    totalXP;
-
-  document.getElementById("progressXP").textContent =
-    totalXP;
-
-  document.getElementById("progressLevel").textContent =
-    "Level " + level;
-
-  document.getElementById("xpBar").style.width =
-    currentXP + "%";
-
-  document.getElementById("progressBar2").style.width =
-    currentXP + "%";
-}
-
-
-/* =========================
-   CHARACTER EVOLUTION
-========================= */
-
-function evolveCharacter() {
-
-  let character = "🤖";
-
-  if(level >= 3) character = "🦾";
-
-  if(level >= 5) character = "🧠";
-
-  if(level >= 8) character = "⚡";
-
-  if(level >= 12) character = "👑";
-
-  document.getElementById("character").textContent =
-    character;
-
-  document.getElementById("progressCharacter").textContent =
-    character;
-}
-
-
-/* =========================
-   SMART STUDY
-========================= */
-
-function smartStudy() {
-
-  const randomSubject =
-    subjects[
-      Math.floor(Math.random() * subjects.length)
-    ];
-
-  openSubject(randomSubject.name);
-
-  alert(
-    "⚡ NEXORA recommends studying "
-    + randomSubject.name
-    + " next."
-  );
-}
-
-
-/* =========================
-   PRACTICE
-========================= */
 
 function completePractice() {
-
-  addXP(20);
-
-  alert(
-    "✅ Practice complete! +20 XP"
-  );
-
-  showScreen("progress");
-}
-
-
-/* =========================
-   AI TUTOR
-========================= */
-
-function askTutor() {
-
-  const input =
-    document.getElementById("questionInput");
-
-  const question =
-    input.value.trim();
-
-  if(!question) return;
-
-  const subject =
-    document.getElementById("tutorSubject").value;
-
-  const chat =
-    document.getElementById("chatBox");
-
-  chat.innerHTML += `
-    <div class="message user">
-      ${escapeHTML(question)}
-    </div>
-  `;
-
-  let answer =
-    "Let's break that down step by step. "
-    + "Tell me which part you find difficult "
-    + "and I'll explain it.";
-
-  const q =
-    question.toLowerCase();
-
-
-  if(q.includes("percent")) {
-
-    answer =
-      "For percentages, remember: "
-      + "percentage = part ÷ whole × 100. "
-      + "Let's work through your exact question step by step.";
-  }
-
-  else if(q.includes("fraction")) {
-
-    answer =
-      "For fractions, first look at whether "
-      + "you need to add, subtract, multiply or divide them. "
-      + "Send me the fraction question and I'll guide you.";
-  }
-
-  else if(
-    q.includes("mean") ||
-    q.includes("average")
-  ) {
-
-    answer =
-      "To find the mean, add all the values together "
-      + "and divide by how many values there are.";
-  }
-
-  else if(
-    q.includes("help") ||
-    q.includes("understand")
-  ) {
-
-    answer =
-      "No problem. 🧠 I'll explain it more simply. "
-      + "Send me the question and tell me what part confused you.";
-  }
-
-
-  chat.innerHTML += `
-
-    <div class="message ai">
-
-      <strong>${subject} Tutor</strong>
-
-      <br><br>
-
-      ${answer}
-
-    </div>
-
-  `;
-
-  input.value = "";
-
-  chat.scrollTop =
-    chat.scrollHeight;
-
-  addXP(5);
-}
-
-
-function openTutorFromSubject() {
-
+  addXP(25);
+  selectedSubject = subjects[0];
   if(selectedSubject) {
-
-    document.getElementById("tutorSubject").value =
-      selectedSubject.name;
-
+    selectedSubject.xp += 25;
+    selectedSubject.progress = Math.min(100, selectedSubject.progress + 10);
   }
-
-  showScreen("tutor");
+  saveNexoraData();
+  openSubject(selectedSubject.name);
 }
 
-
-/* =========================
-   PATTERN FINDER
-========================= */
-
-function analyseTest() {
-
-  const text =
-    document.getElementById("testInput")
-    .value
-    .toLowerCase();
-
-  if(!text.trim()) {
-
-    alert(
-      "Paste some test questions first."
-    );
-
-    return;
-  }
-
-
-  const patterns = {
-
-    "Percentages":
-      ["percentage","percent","%"],
-
-    "Algebra":
-      ["algebra","equation","solve for x","x ="],
-
-    "Fractions":
-      ["fraction","numerator","denominator"],
-
-    "Data Handling":
-      ["mean","median","mode","range"],
-
-    "Geometry":
-      ["angle","triangle","area","perimeter","volume"],
-
-    "Graphs":
-      ["graph","coordinate","plot"],
-
-    "Definitions":
-      ["define","what is","meaning of"],
-
-    "Explain Questions":
-      ["explain","describe","discuss"],
-
-    "Compare Questions":
-      ["compare","difference","similar"]
-
-  };
-
-
-  let found = [];
-
-
-  for(
-    const pattern in patterns
-  ) {
-
-    const words =
-      patterns[pattern];
-
-    let count = 0;
-
-
-    words.forEach(word => {
-
-      if(text.includes(word)) {
-        count++;
-      }
-
-    });
-
-
-    if(count > 0) {
-
-      found.push({
-        name:pattern,
-        count:count
-      });
-
-    }
-
-  }
-
-
-  let html =
-    "<h3>🔎 Pattern Report</h3>";
-
-
-  if(found.length === 0) {
-
-    html += `
-
-      <div class="pattern">
-
-        I couldn't detect a clear pattern yet.
-        Try pasting more questions.
-
-      </div>
-
-    `;
-
-  }
-
-  else {
-
-    found.sort(
-      (a,b) => b.count - a.count
-    );
-
-
-    found.forEach(item => {
-
-      html += `
-
-        <div class="pattern">
-
-          <strong>
-            ${item.name}
-          </strong>
-
-          <br>
-
-          Detected
-          ${item.count}
-          related pattern(s).
-
-        </div>
-
-      `;
-
-    });
-
-
-    html += `
-
-      <div class="pattern">
-
-        💡 <strong>
-        NEXORA recommendation:
-        </strong>
-
-        <br>
-
-        Focus your next practice session on
-
-        <strong>
-          ${found[0].name}
-        </strong>.
-
-      </div>
-
-    `;
-
-    addXP(15);
-  }
-
-
-  document.getElementById(
-    "patternResult"
-  ).innerHTML = html;
-}
-
-
-/* =========================
-   SMART STUDY PLANNER
-========================= */
 
 function openStudyPlanner() {
-
-  showScreen("planner");
-
+  showScreen('planner');
 }
-
 
 function createStudyPlan() {
+  const subject = document.getElementById("planSubject").value;
+  const days = document.getElementById("planDays").value || 7;
+  const weak = document.getElementById("planWeak").value || "core concepts";
 
-  const subject =
-    document.getElementById(
-      "planSubject"
-    ).value;
+  const result = document.getElementById("studyPlanResult");
+  result.innerHTML = `
+    <div class="card">
+      <h3>📘 Study Plan for ${subject}</h3>
+      <p class="tip">
+        You have ${days} days to focus on ${weak}.<br><br>
+        1. Review key theory and definitions.<br>
+        2. Complete a timed practice set.<br>
+        3. Focus on weak areas and mistakes.<br>
+        4. Finish with a quick recap quiz.
+      </p>
+    </div>
+  `;
+}
 
-  const days =
-    parseInt(
-      document.getElementById(
-        "planDays"
-      ).value
-    );
+function analyseTest() {
+  const text = document.getElementById("testInput").value.trim();
+  const result = document.getElementById("patternResult");
 
-  const weak =
-    document.getElementById(
-      "planWeak"
-    ).value.trim();
-
-
-  if(!days || days < 1) {
-
-    alert(
-      "Please enter how many days you have left."
-    );
-
+  if(!text) {
+    result.innerHTML = `<div class="pattern">Add some test questions first.</div>`;
     return;
   }
 
+  const topics = ["algebra", "fractions", "reading", "grammar", "maps", "energy", "cells", "equations"];
+  const found = topics.filter(topic => text.toLowerCase().includes(topic));
 
-  let plan = "";
-
-
-  if(days === 1) {
-
-    plan = `
-
-      <div class="pattern">
-
-        <strong>
-          🚨 Emergency Study Plan
-        </strong>
-
-        <br><br>
-
-        1. Review your weakest topics.<br>
-        2. Study important definitions and formulas.<br>
-        3. Complete practice questions.<br>
-        4. Review your mistakes.<br>
-        5. Do a quick final revision.
-
-      </div>
-
-    `;
-
+  if(!found.length) {
+    result.innerHTML = `<div class="pattern">No clear patterns found yet. Try adding more detail from your test.</div>`;
+    return;
   }
 
-  else if(days <= 3) {
-
-    plan = `
-
-      <div class="pattern">
-
-        <strong>
-          ⚡ 3-Day Study Plan
-        </strong>
-
-        <br><br>
-
-        <strong>Day 1:</strong>
-        Learn your weakest topics.
-
-        <br>
-
-        <strong>Day 2:</strong>
-        Complete practice questions.
-
-        <br>
-
-        <strong>Day 3:</strong>
-        Do a mini test and review mistakes.
-
-      </div>
-
-    `;
-
-  }
-
-  else {
-
-    const firstDays =
-      Math.max(
-        1,
-        Math.floor(days * 0.4)
-      );
-
-    const practiceDays =
-      Math.max(
-        1,
-        Math.floor(days * 0.4)
-      );
-
-    const finalDays =
-      Math.max(
-        1,
-        days - firstDays - practiceDays
-      );
-
-
-    plan = `
-
-      <div class="pattern">
-
-        <strong>
-          🧠 Your NEXORA Study Plan
-        </strong>
-
-        <br><br>
-
-        <strong>Subject:</strong>
-        ${escapeHTML(subject)}
-
-        <br>
-
-        <strong>Days remaining:</strong>
-        ${days}
-
-        <br><br>
-
-        <strong>
-          📚 Phase 1 — Learn
-        </strong>
-
-        <br>
-
-        Spend about
-        ${firstDays}
-        day(s) learning your weak topics.
-
-        ${
-          weak
-          ? "<br>Focus on: " +
-            escapeHTML(weak)
-          : ""
-        }
-
-        <br><br>
-
-        <strong>
-          ✏️ Phase 2 — Practice
-        </strong>
-
-        <br>
-
-        Spend about
-        ${practiceDays}
-        day(s) doing questions and
-        practising the methods you struggle with.
-
-        <br><br>
-
-        <strong>
-          🏆 Phase 3 — Exam Mode
-        </strong>
-
-        <br>
-
-        Spend about
-        ${finalDays}
-        day(s) doing revision,
-        correcting mistakes and testing yourself.
-
-      </div>
-
-    `;
-
-  }
-
-
-  document.getElementById(
-    "studyPlanResult"
-  ).innerHTML = plan;
-
-
-  addXP(10);
-
+  result.innerHTML = found.map(topic => `
+    <div class="pattern">
+      🔍 Pattern detected: <strong>${topic}</strong><br>
+      This appears repeatedly across your questions and may need extra revision.
+    </div>
+  `).join("");
 }
 
+function askTutor() {
+  const subject = document.getElementById("tutorSubject").value;
+  const question = document.getElementById("questionInput").value.trim();
+  const chatBox = document.getElementById("chatBox");
 
-/* =========================
-   SAVE NEXORA PROGRESS
-========================= */
+  if(!question) {
+    chatBox.innerHTML += `<div class="message user">Please type a question.</div>`;
+    return;
+  }
+
+  chatBox.innerHTML += `<div class="message user">${question}</div>`;
+  document.getElementById("questionInput").value = "";
+
+  const answer = `For ${subject}, the best place to start is to break the question into steps and identify the key idea. Try a simple example first, then apply the method to your question.`;
+
+  chatBox.innerHTML += `<div class="message ai">${answer}</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function openTutorFromSubject() {
+  showScreen('tutor');
+}
+
+function smartStudy() {
+  const subject = subjects[Math.floor(Math.random() * subjects.length)];
+  openSubject(subject.name);
+}
 
 function saveNexoraData() {
-
-  const saveData = {
-
-    totalXP: totalXP,
-
-    level: level,
-
-    subjects: subjects
-
-  };
-
-
-  localStorage.setItem(
-
-    "nexoraProgress",
-
-    JSON.stringify(saveData)
-
-  );
-
+  localStorage.setItem('nexoraData', JSON.stringify({ totalXP, level, subjects }));
 }
 
-
-/* =========================
-   LOAD NEXORA PROGRESS
-========================= */
-
 function loadNexoraData() {
-
-  const saved =
-    localStorage.getItem(
-      "nexoraProgress"
-    );
-
-
+  const saved = localStorage.getItem('nexoraData');
   if(!saved) {
+    loadSubjects();
     return;
   }
 
-
   try {
-
-    const data =
-      JSON.parse(saved);
-
-
-    if(
-      typeof data.totalXP === "number"
-    ) {
-
-      totalXP =
-        data.totalXP;
-
+    const data = JSON.parse(saved);
+    if(data.totalXP) totalXP = data.totalXP;
+    if(data.level) level = data.level;
+    if(data.subjects) {
+      subjects.length = 0;
+      data.subjects.forEach(subject => subjects.push(subject));
     }
-
-
-    if(
-      typeof data.level === "number"
-    ) {
-
-      level =
-        data.level;
-
-    }
-
-
-    if(
-      Array.isArray(data.subjects)
-    ) {
-
-      data.subjects.forEach(
-        savedSubject => {
-
-          const currentSubject =
-            subjects.find(
-              subject =>
-                subject.name ===
-                savedSubject.name
-            );
-
-
-          if(currentSubject) {
-
-            currentSubject.xp =
-              savedSubject.xp || 0;
-
-            currentSubject.progress =
-              savedSubject.progress || 0;
-
-          }
-
-        }
-      );
-
-    }
-
+  } catch (e) {
+    console.log('Local data not loaded');
   }
 
-  catch(error) {
-
-    console.log(
-      "NEXORA could not load saved progress."
-    );
-
-  }
-
+  loadSubjects();
+  addXP(0);
 }
 
-
-/* =========================
-   AUTO SAVE
-========================= */
-
-setInterval(
-  function() {
-
-    saveNexoraData();
-
-  },
-  5000
-);
-
-
-/* =========================
-   SAVE WHEN LEAVING
-========================= */
-
-window.addEventListener(
-  "beforeunload",
-  function() {
-
-    saveNexoraData();
-
-  }
-);
-
-
-/* =========================
-   SECURITY
-========================= */
-
-function escapeHTML(text) {
-
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    text;
-
-  return div.innerHTML;
-
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
 }
-
-
-/* =========================
-   START NEXORA
-========================= */
 
 loadNexoraData();
-
-loadSubjects();
-
-updateXP();
-
-evolveCharacter();
 
 </script>
 
